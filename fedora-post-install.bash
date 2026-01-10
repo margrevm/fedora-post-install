@@ -108,9 +108,6 @@ sudo dnf install \
   "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_VERSION}.noarch.rpm" \
   "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_VERSION}.noarch.rpm"
 
-log_step "Enabling fedora-cisco-openh264 (if available)..."
-sudo dnf config-manager --set-enabled fedora-cisco-openh264 || log_warn "Repository 'fedora-cisco-openh264' not available; skipping."
-
 log_step "Adding Microsoft VS Code repository..."
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" \
@@ -126,7 +123,6 @@ DNF_INSTALL_PACKAGES=(
   htop
 
   gnome-tweaks
-  gnome-extensions-app
   gnome-shell-extension-gsconnect
 
   python3
@@ -148,9 +144,7 @@ DNF_INSTALL_PACKAGES=(
   java-latest-openjdk-devel
 
   libreoffice
-  simple-scan
   drawing
-  snapshot
   pdfarranger
   xournalpp
 
@@ -158,9 +152,6 @@ DNF_INSTALL_PACKAGES=(
 
   chromium
   code
-
-  wine
-  wine.i686
   lutris
   steam
 
@@ -234,7 +225,6 @@ FLATPAK_INSTALL_PACKAGES=(
   com.bitwarden.desktop
   com.stremio.Stremio
   com.spotify.Client
-  org.mozilla.firefox
   com.meetfranz.Franz
   com.discordapp.Discord
   net.cozic.joplin_desktop
