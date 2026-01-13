@@ -161,7 +161,7 @@ log_step "Installing packages..."
 sudo dnf install "${DNF_INSTALL_PACKAGES[@]}"
 
 log_step "Installing multimedia codecs (RPM Fusion)..."
-sudo dnf group upgrade --with-optional Multimedia --allowerasing
+sudo dnf group install --with-optional multimedia --allowerasing
 
 DNF_REMOVE_PACKAGES=(
   geary
