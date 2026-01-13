@@ -322,17 +322,5 @@ log_section "Summary"
 log_step "System info..."
 fastfetch
 
-log_step "Checking if a reboot is required..."
-set +e
-sudo dnf needs-restarting -r
-rc=$?
-set -e
-
-case "$rc" in
-  0) printf "➜ Reboot not required.\n" ;;
-  1) printf "➜ Reboot is recommended.\n" ;;
-  *) printf "➜ needs-restarting failed with exit code %d\n" "$rc"; exit "$rc" ;;
-esac
-
 printf "\n[Installation completed!]\n"
 cd "$HOME"
