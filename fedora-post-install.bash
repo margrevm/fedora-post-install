@@ -225,6 +225,7 @@ FLATPAK_INSTALL_PACKAGES=(
   com.discordapp.Discord
   net.cozic.joplin_desktop
   com.mattjakeman.ExtensionManager
+  com.synology.SynologyDrive
 )
 
 log_step "Add flatpak repositories..."
@@ -240,15 +241,6 @@ sudo flatpak update
 # Custom installs
 # ---------------------------------------------------
 log_section "Custom installs"
-
-log_step "Installing Synology Drive Client (unofficial COPR)..."
-log_warn "This uses an unofficial package source (not supported by Synology). Proceed only if you accept that risk."
-
-log_step "Enable COPR repository..."
-sudo dnf copr enable emixampp/synology-drive || log_warn "Failed to enable COPR emixampp/synology-drive."
-
-log_step "Install Synology Drive Client (GNOME variant)..."
-sudo dnf --refresh install synology-drive || log_warn "Failed to install synology-drive (try again later or use the project's local-build method)."
 
 # ---------------------------------------------------
 # Tailscale
