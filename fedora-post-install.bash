@@ -221,7 +221,7 @@ FLATPAK_INSTALL_PACKAGES=(
   com.bitwarden.desktop
   com.stremio.Stremio
   com.spotify.Client
-  com.meetfranz.Franz
+  org.ferdium.Ferdium
   com.discordapp.Discord
   net.cozic.joplin_desktop
   com.mattjakeman.ExtensionManager
