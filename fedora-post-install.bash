@@ -63,10 +63,6 @@ CREATE_DIRS=(
 )
 
 REMOVE_DIRS=(
-  "$HOME/Templates"
-  "$HOME/Music"
-  "$HOME/Videos"
-  "$HOME/Public"
 )
 
 log_step "Creating directories..."
