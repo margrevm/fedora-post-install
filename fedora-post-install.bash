@@ -35,12 +35,12 @@ prompt_continue() {
 }
 
 log_section() {
-  printf "\n[%s]\n" "$1"
+  printf "\n\033[1;34m[%s]\033[0m\n" "$1"
   prompt_continue "Continue"
 }
 
 log_step() {
-  printf "➜ %s\n" "$1"
+  printf "\033[0;34m➜ %s\033[0m\n" "$1"
 }
 
 log_warn() {
@@ -134,7 +134,7 @@ DNF_INSTALL_PACKAGES=(
   net-tools
   nmap
 
-  wl-clipboard
+  wl-clipboard # Wayland clipboard utilities equivalent to xclip/xsel
 
   java-latest-openjdk
   java-latest-openjdk-devel
@@ -155,6 +155,8 @@ DNF_INSTALL_PACKAGES=(
 
   flatpak
   tailscale
+
+  lpf-mscore-fonts # Microsoft core fonts
 )
 
 log_step "Installing packages..."
@@ -177,9 +179,9 @@ log_step "Removing unused dependencies..."
 sudo dnf autoremove
 
 # ---------------------------------------------------
-# Microsoft core fonts (Option A)
+# Fonts
 # ---------------------------------------------------
-log_section "Installing Microsoft core fonts (lpf-mscore-fonts)"
+log_section "Installing fonts"
 
 log_step "Installing lpf-mscore-fonts (RPM Fusion nonfree)..."
 sudo dnf install lpf-mscore-fonts
@@ -240,7 +242,9 @@ sudo flatpak update
 # ---------------------------------------------------
 # Custom installs
 # ---------------------------------------------------
-log_section "Custom installs"
+# log_section "Custom installs"
+
+# ... nothing here yet ...
 
 # ---------------------------------------------------
 # Tailscale
@@ -323,4 +327,5 @@ log_step "System info..."
 fastfetch
 
 printf "\n[Installation completed!]\n"
+log_step "Now reboot..."
 cd "$HOME"
