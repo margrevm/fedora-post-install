@@ -1,4 +1,4 @@
-## Fedora post-installation script
+# Fedora post-installation script
 
 A basic Fedora post-installation shell script to bootstrap a fresh workstation installation. Feel free to fork it and tailor it to your own needs.
 
@@ -34,4 +34,4 @@ chmod +x fedora-postinstall.sh
 
 ## Credits
 
-Created by Mike Margreve ([mike.margreve@outlook.com](mailto:mike.margreve@outlook.com)) and licensed under the MIT License. The original source can be found here: [https://github.com/margrevm/fedora-post-install](https://github.com/margrevm/fedora-post-install)
+Created by Mike Margreve and licensed under the MIT License. The original source can be found here: <https://github.com/margrevm/fedora-post-install>
