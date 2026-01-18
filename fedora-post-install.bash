@@ -184,9 +184,6 @@ sudo dnf autoremove
 # ---------------------------------------------------
 log_section "Installing fonts"
 
-log_step "Installing lpf-mscore-fonts (RPM Fusion nonfree)..."
-sudo dnf install lpf-mscore-fonts
-
 log_step "Running lpf update (downloads/builds/installs fonts)..."
 sudo lpf update
 
