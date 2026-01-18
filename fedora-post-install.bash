@@ -82,14 +82,9 @@ done
 # ---------------------------------------------------
 # Symbolic links
 # ---------------------------------------------------
-log_section "Symbolic links"
+#log_section "Symbolic links"
 
-log_step "Linking GVFS mountpoint to ~/smb (if available)..."
-if [[ -e "$HOME/smb" ]]; then
-  log_warn "$HOME/smb already exists; will not overwrite."
-else
-  ln -s "/run/user/$UID/gvfs" "$HOME/smb" || log_warn "Failed to create ~/smb symlink (GVFS may not be running)."
-fi
+# ... nothing here yet ...
 
 # ---------------------------------------------------
 # DNF repositories and packages
