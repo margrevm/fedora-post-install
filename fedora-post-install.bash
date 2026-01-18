@@ -44,7 +44,7 @@ log_step() {
 }
 
 log_warn() {
-  printf "WARN: %s\n" "$1"
+  printf "\033[1;33mWARN: %s\033[0m\n" "$1"
   prompt_continue "Continue anyway"
 }
 
@@ -104,7 +104,9 @@ sudo dnf install \
   "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_VERSION}.noarch.rpm" \
   "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_VERSION}.noarch.rpm"
 
-log_step "Adding Microsoft VS Code repository..."
+log_step "Adding non-default repositories..."
+
+# Microsoft VS Code repo:
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" \
   | sudo tee /etc/yum.repos.d/vscode.repo
@@ -112,15 +114,12 @@ echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com
 log_step "Refreshing and upgrading system packages..."
 sudo dnf upgrade --refresh
 
-# Main packages (no gedit, no xclip; Wayland clipboard via wl-clipboard)
 DNF_INSTALL_PACKAGES=(
   tree
   fastfetch
   htop
-
   gnome-tweaks
   gnome-shell-extension-gsconnect
-
   python3
   python3-pip
   git
@@ -133,27 +132,19 @@ DNF_INSTALL_PACKAGES=(
   stow
   net-tools
   nmap
-
   wl-clipboard # Wayland clipboard utilities equivalent to xclip/xsel
-
   java-latest-openjdk
   java-latest-openjdk-devel
-
   libreoffice
   drawing
   pdfarranger
   xournalpp
-
   heif-pixbuf-loader
-
   chromium
   code
   lutris
   steam
-
   bat
-
-  flatpak
   tailscale
 
   lpf-mscore-fonts # Microsoft core fonts
