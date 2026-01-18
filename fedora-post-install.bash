@@ -287,9 +287,9 @@ log_section "Cloning git repos"
 
 cd "$HOME/scripts"
 
-git clone git@github.com:margrevm/ubuntu-post-install.git || log_warn "Clone failed (already exists or access issue)."
-git clone git@github.com:margrevm/ubuntu-update.git || log_warn "Clone failed (already exists or access issue)."
-git clone git@github.com:margrevm/ubuntu-cleanup.git || log_warn "Clone failed (already exists or access issue)."
+git clone git@github.com:margrevm/fedora-post-install.git || log_warn "Clone failed (already exists or access issue)."
+git clone git@github.com:margrevm/fedora-update.git || log_warn "Clone failed (already exists or access issue)."
+git clone git@github.com:margrevm/housekeep.git || log_warn "Clone failed (already exists or access issue)."
 
 # ---------------------------------------------------
 # Dotfiles via stow
