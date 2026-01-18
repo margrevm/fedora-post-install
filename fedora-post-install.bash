@@ -146,8 +146,18 @@ DNF_INSTALL_PACKAGES=(
   steam
   bat
   tailscale
+  lpf-mscore-fonts  # Microsoft core fonts
+  kernel-devel      # NVIDIA driver prerequisite
+  kernel-headers    # NVIDIA driver prerequisite
+  gcc       
+  make
+  akmods            # NVIDIA driver prerequisite
+  dkms              # NVIDIA driver prerequisite
+  akmod-nvidia      # NVIDIA driver
+  xorg-x11-drv-nvidia-cuda  # NVIDIA driver prerequisite
+  nvidia-settings           # NVIDIA driver prerequisite
+  libva-nvidia-driver       # NVIDIA driver prerequisite
 
-  lpf-mscore-fonts # Microsoft core fonts
 )
 
 log_step "Installing packages..."
@@ -184,18 +194,13 @@ log_step "Updating font cache..."
 sudo fc-cache -f
 
 # ---------------------------------------------------
-# NVIDIA drivers (RTX 4060) - RPM Fusion akmod
+# Drivers
 # ---------------------------------------------------
+# NVIDIA drivers (RTX 4060)
 log_section "NVIDIA drivers (RTX 4060)"
 
 log_step "Checking Secure Boot status (mokutil)..."
 mokutil --sb-state || log_warn "mokutil not available; cannot check Secure Boot status."
-
-log_step "Installing build prerequisites for akmods..."
-sudo dnf install kernel-devel kernel-headers gcc make akmods dkms
-
-log_step "Installing NVIDIA driver stack (akmod-nvidia)..."
-sudo dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda nvidia-settings
 
 log_step "Building NVIDIA kernel module (akmods)..."
 sudo akmods --force
