@@ -167,8 +167,7 @@ log_step "Installing multimedia codecs (RPM Fusion)..."
 sudo dnf group install --with-optional multimedia --allowerasing
 
 DNF_REMOVE_PACKAGES=(
-  geary
-  gnome-contacts
+  gnome-tour
 )
 
 log_step "Removing unwanted packages (if present)..."
@@ -186,6 +185,7 @@ log_section "Installing fonts"
 
 log_step "Running lpf update (downloads/builds/installs fonts)..."
 sudo lpf update
+sudo lpf install ms-core-fonts
 
 log_step "Updating font cache..."
 sudo fc-cache -f
