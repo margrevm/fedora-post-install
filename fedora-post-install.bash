@@ -141,6 +141,7 @@ DNF_INSTALL_PACKAGES=(
   steam
   bat
   tailscale
+  trayscale
   lpf-mscore-fonts  # Microsoft core fonts
   kernel-devel      # NVIDIA driver prerequisite
   kernel-headers    # NVIDIA driver prerequisite
@@ -240,7 +241,9 @@ sudo flatpak update
 log_section "Tailscale"
 
 log_step "Enable and start tailscaled..."
-sudo systemctl enable --now tailscaled
+sudo tailscale set --operator=$USER
+sudo tailscale up --reset
+tailscale set --auto-update
 log_warn "Run 'sudo tailscale up' manually to authenticate this machine."
 
 # ---------------------------------------------------
