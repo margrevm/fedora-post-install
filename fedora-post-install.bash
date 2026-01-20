@@ -138,6 +138,8 @@ DNF_INSTALL_PACKAGES=(
   chromium
   code
   lutris
+  gnome-terminal    # Lutris prerequisite
+  vulkan-tools      # Lutris prerequisite
   steam
   bat
   tailscale
