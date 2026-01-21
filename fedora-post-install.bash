@@ -195,7 +195,9 @@ sudo dnf autoremove
 log_section "Installing fonts"
 
 log_step "Running lpf update (downloads/builds/installs fonts)..."
-sudo lpf update
+sudo lpf update || true
+
+log_step "lpf install ms-core-fonts"
 sudo lpf install ms-core-fonts
 
 log_step "Updating font cache..."
