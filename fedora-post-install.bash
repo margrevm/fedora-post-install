@@ -156,6 +156,7 @@ DNF_INSTALL_PACKAGES=(
   bat
   tailscale
   trayscale
+  snapper
   lpf-mscore-fonts  # Microsoft core fonts
   kernel-devel      # NVIDIA driver prerequisite
   kernel-headers    # NVIDIA driver prerequisite
