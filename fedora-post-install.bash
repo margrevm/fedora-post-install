@@ -51,6 +51,18 @@ log_warn() {
 FEDORA_VERSION="$(rpm -E %fedora)"
 
 # ---------------------------------------------------
+# Select hostname
+# ---------------------------------------------------
+log_section "Setting hostname"
+
+NEW_HOSTNAME="pc-mike"
+
+log_step "Set hostname to $NEW_HOSTNAME..."
+
+prompt_continue "Run: sudo hostnamectl set-hostname $NEW_HOSTNAME"
+sudo hostnamectl set-hostname "$NEW_HOSTNAME"
+
+# ---------------------------------------------------
 # Creating folder structure
 # ---------------------------------------------------
 log_section "Creating the folder structure"
