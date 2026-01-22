@@ -48,6 +48,24 @@ log_warn() {
   prompt_continue "Continue anyway"
 }
 
+
+set_gsetting() {
+  local schema="$1"
+  local key="$2"
+  local value="$3"
+  local desc="${4:-}"
+
+  if [[ -n "$desc" ]]; then
+    log_step "$desc"
+  fi
+
+  if gsettings writable "$schema" "$key" >/dev/null 2>&1; then
+    gsettings set "$schema" "$key" "$value"
+  else
+    log_warn "gsettings key not available: $schema $key"
+  fi
+}
+
 FEDORA_VERSION="$(rpm -E %fedora)"
 
 # ---------------------------------------------------
@@ -264,12 +282,34 @@ tailscale set --auto-update
 log_warn "Run 'sudo tailscale up' manually to authenticate this machine."
 
 # ---------------------------------------------------
-# GNOME extensions (enable GSConnect only)
+# GNOME settings
 # ---------------------------------------------------
-log_section "GNOME extensions"
+log_section "GNOME settings"
 
-log_step "Enable GSConnect extension..."
+log_step "Enable Gnome extensions..."
 gnome-extensions enable gsconnect@andyholmes.github.io || log_warn "Failed to enable GSConnect (extension may not be installed for this user/session, or gnome-extensions may not be available)."
+
+log_step "General GNOME settings..."
+set_gsetting org.gnome.desktop.sound event-sounds false "Alert sounds: off"
+set_gsetting org.gnome.desktop.interface enable-hot-corners false "Hot corner: off"
+set_gsetting org.gnome.desktop.notifications show-in-lock-screen false "Lock screen notifications: off"
+set_gsetting org.gnome.desktop.session idle-delay 900 "Power saving idle delay: 15 minutes"
+set_gsetting org.gnome.desktop.screensaver lock-delay 300 "Screen lock delay: 5 minutes"
+set_gsetting org.gnome.desktop.interface power-profile "performance" "Power profile: performance"
+set_gsetting org.gnome.system.locale region "fr_BE.UTF-8" "Formats: Belgium"
+
+log_step "Files (Nautilus) settings"
+set_gsetting org.gnome.nautilus.preferences sort-directories-first true "Sort folders before files"
+set_gsetting org.gnome.nautilus.preferences recursive-search "always" "Search all locations"
+set_gsetting org.gnome.nautilus.preferences show-image-thumbnails "always" "Enable thumbnails for all folders"
+
+log_section "Text Editor settings"
+set_gsetting org.gnome.TextEditor show-line-numbers true "Display line numbers: on"
+set_gsetting org.gnome.TextEditor highlight-current-line true "Highlight current line: on"
+set_gsetting org.gnome.TextEditor show-overview-map true "Display overview map: on"
+set_gsetting org.gnome.TextEditor indent-style "'space'" "Indentation: spaces"
+set_gsetting org.gnome.TextEditor tab-width 4 "Spaces per tab: 4"
+set_gsetting org.gnome.TextEditor indent-width 4 "Spaces per indent: 4"
 
 # ---------------------------------------------------
 # Create SSH key
