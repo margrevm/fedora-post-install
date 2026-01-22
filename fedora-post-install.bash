@@ -161,13 +161,13 @@ log_section "Installing fonts"
 if command -v fc-match >/dev/null 2>&1 && fc-match -f '%{family}\n' 'Arial' | grep -qi 'Arial'; then
   log_step "Arial font found; skipping ms-core-fonts install"
 else
-sudo lpf update || true
+  sudo lpf update || true
 
-log_step "lpf install ms-core-fonts"
-sudo lpf install ms-core-fonts
+  log_step "lpf install ms-core-fonts"
+  sudo lpf install ms-core-fonts
 
-log_step "Updating font cache..."
-sudo fc-cache -f
+  log_step "Updating font cache..."
+  sudo fc-cache -f
 fi
 
 # ---------------------------------------------------
@@ -186,13 +186,13 @@ fi
 if lsmod | grep -Eq '^nvidia|^nvidia_drm|^nvidia_uvm|^nvidia_modeset'; then
   log_step "NVIDIA driver modules already loaded; skipping akmods/dracut"
 else
-log_step "Building NVIDIA kernel module (akmods)..."
-sudo akmods --force
+  log_step "Building NVIDIA kernel module (akmods)..."
+  sudo akmods --force
 
-log_step "Regenerating initramfs (dracut)..."
-sudo dracut --force
+  log_step "Regenerating initramfs (dracut)..."
+  sudo dracut --force
 
-log_warn "Reboot is strongly recommended after NVIDIA driver installation (and may be required, especially with Secure Boot)."
+  log_warn "Reboot is strongly recommended after NVIDIA driver installation (and may be required, especially with Secure Boot)."
 fi
 
 # ---------------------------------------------------
@@ -223,11 +223,23 @@ sudo flatpak update
 # ---------------------------------------------------
 log_section "Tailscale"
 
-log_step "Enable and start tailscaled..."
-sudo tailscale set --operator=$USER
-sudo tailscale up --reset
-tailscale set --auto-update
-log_warn "Run 'sudo tailscale up' manually to authenticate this machine."
+if ! command -v tailscale >/dev/null 2>&1; then
+  log_warn "Tailscale not installed; skipping"
+else
+  if systemctl is-active --quiet tailscaled; then
+    log_step "tailscaled already running"
+  else
+    log_step "Enable and start tailscaled..."
+    sudo systemctl enable --now tailscaled || log_warn "Failed to enable/start tailscaled"
+  fi
+
+  if tailscale status >/dev/null 2>&1; then
+    log_step "Tailscale already authenticated; skipping login"
+  else
+    log_step "Authenticate Tailscale (opens browser for login)"
+    sudo tailscale up || log_warn "tailscale up failed (authentication may be required)"
+  fi
+fi
 
 # ---------------------------------------------------
 # GNOME settings
