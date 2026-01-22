@@ -214,32 +214,8 @@ sudo flatpak update
 # ---------------------------------------------------
 # Custom installs
 # ---------------------------------------------------
-# log_section "Custom installs"
-
-# ... nothing here yet ...
-
-# ---------------------------------------------------
-# Tailscale
-# ---------------------------------------------------
-log_section "Tailscale"
-
-if ! command -v tailscale >/dev/null 2>&1; then
-  log_warn "Tailscale not installed; skipping"
-else
-  if systemctl is-active --quiet tailscaled; then
-    log_step "tailscaled already running"
-  else
-    log_step "Enable and start tailscaled..."
-    sudo systemctl enable --now tailscaled || log_warn "Failed to enable/start tailscaled"
-  fi
-
-  if tailscale status >/dev/null 2>&1; then
-    log_step "Tailscale already authenticated; skipping login"
-  else
-    log_step "Authenticate Tailscale (opens browser for login)"
-    sudo tailscale up || log_warn "tailscale up failed (authentication may be required)"
-  fi
-fi
+log_section "Custom installs"
+CUSTOM_INSTALL
 
 # ---------------------------------------------------
 # GNOME settings
