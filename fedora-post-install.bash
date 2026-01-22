@@ -110,9 +110,8 @@ done
 # ---------------------------------------------------
 # Symbolic links
 # ---------------------------------------------------
-#log_section "Symbolic links"
-
-# ... nothing here yet ...
+log_section "Symbolic links"
+CREATE_SYMBOLIC_LINKS
 
 # ---------------------------------------------------
 # DNF repositories and packages
