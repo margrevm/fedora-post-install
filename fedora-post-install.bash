@@ -68,6 +68,16 @@ set_gsetting() {
 
 FEDORA_VERSION="$(rpm -E %fedora)"
 
+# LOAD CONFIGURATION
+CONFIG_FILE="${CONFIG_FILE:-$(dirname "$0")/pc-mike.cfg}"
+if [[ -f "$CONFIG_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$CONFIG_FILE"
+else
+  printf "Config file not found: %s\n" "$CONFIG_FILE" >&2
+  exit 1
+fi
+
 # ---------------------------------------------------
 # Select hostname
 # ---------------------------------------------------
@@ -84,16 +94,6 @@ sudo hostnamectl set-hostname "$NEW_HOSTNAME"
 # Creating folder structure
 # ---------------------------------------------------
 log_section "Creating the folder structure"
-
-CREATE_DIRS=(
-  "$HOME/projects"
-  "$HOME/scripts"
-  "$HOME/src"
-  "$HOME/tmp"
-)
-
-REMOVE_DIRS=(
-)
 
 log_step "Creating directories..."
 mkdir -pv "${CREATE_DIRS[@]}"
@@ -139,65 +139,11 @@ echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com
 log_step "Refreshing and upgrading system packages..."
 sudo dnf upgrade --refresh
 
-DNF_INSTALL_PACKAGES=(
-  tree
-  fastfetch
-  htop
-  gnome-tweaks
-  gnome-shell-extension-gsconnect
-  python3
-  python3-pip
-  git
-  curl
-  wget
-  unzip
-  less
-  vim
-  colordiff
-  stow
-  net-tools
-  nmap
-  wl-clipboard # Wayland clipboard utilities equivalent to xclip/xsel
-  java-latest-openjdk
-  java-latest-openjdk-devel
-  libreoffice
-  drawing
-  pdfarranger
-  xournalpp
-  heif-pixbuf-loader
-  chromium
-  code
-  lutris
-  gnome-terminal    # Lutris prerequisite
-  vulkan-tools      # Lutris prerequisite
-  steam
-  bat
-  tailscale
-  trayscale
-  snapper
-  lpf-mscore-fonts  # Microsoft core fonts
-  kernel-devel      # NVIDIA driver prerequisite
-  kernel-headers    # NVIDIA driver prerequisite
-  gcc       
-  make
-  akmods            # NVIDIA driver prerequisite
-  dkms              # NVIDIA driver prerequisite
-  akmod-nvidia      # NVIDIA driver
-  xorg-x11-drv-nvidia-cuda  # NVIDIA driver prerequisite
-  nvidia-settings           # NVIDIA driver prerequisite
-  libva-nvidia-driver       # NVIDIA driver prerequisite
-
-)
-
 log_step "Installing packages..."
 sudo dnf install "${DNF_INSTALL_PACKAGES[@]}"
 
 log_step "Installing multimedia codecs (RPM Fusion)..."
 sudo dnf group install --with-optional multimedia --allowerasing
-
-DNF_REMOVE_PACKAGES=(
-  gnome-tour
-)
 
 log_step "Removing unwanted packages (if present)..."
 for pkg in "${DNF_REMOVE_PACKAGES[@]}"; do
@@ -243,16 +189,7 @@ log_warn "Reboot is strongly recommended after NVIDIA driver installation (and m
 # ---------------------------------------------------
 log_section "Installing flatpak packages"
 
-FLATPAK_INSTALL_PACKAGES=(
-  com.bitwarden.desktop
-  com.stremio.Stremio
-  com.spotify.Client
-  org.ferdium.Ferdium
-  com.discordapp.Discord
-  net.cozic.joplin_desktop
-  com.mattjakeman.ExtensionManager
-  com.synology.SynologyDrive
-)
+FLATHUB_REMOTE_URL="https://flathub.org/repo/flathub.flatpakrepo"
 
 log_step "Add flatpak repositories..."
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
