@@ -158,7 +158,9 @@ sudo dnf autoremove
 # ---------------------------------------------------
 log_section "Installing fonts"
 
-log_step "Running lpf update (downloads/builds/installs fonts)..."
+if command -v fc-match >/dev/null 2>&1 && fc-match -f '%{family}\n' 'Arial' | grep -qi 'Arial'; then
+  log_step "Arial font found; skipping ms-core-fonts install"
+else
 sudo lpf update || true
 
 log_step "lpf install ms-core-fonts"
@@ -166,6 +168,7 @@ sudo lpf install ms-core-fonts
 
 log_step "Updating font cache..."
 sudo fc-cache -f
+fi
 
 # ---------------------------------------------------
 # Drivers
