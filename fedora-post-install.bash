@@ -83,8 +83,6 @@ fi
 # ---------------------------------------------------
 log_section "Setting hostname"
 
-NEW_HOSTNAME="pc-mike"
-
 log_step "Set hostname to $NEW_HOSTNAME..."
 
 prompt_continue "Run: sudo hostnamectl set-hostname $NEW_HOSTNAME"
