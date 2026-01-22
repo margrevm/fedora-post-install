@@ -203,7 +203,7 @@ log_section "Installing flatpak packages"
 FLATHUB_REMOTE_URL="https://flathub.org/repo/flathub.flatpakrepo"
 
 log_step "Add flatpak repositories..."
-sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak remote-add --if-not-exists flathub "$FLATHUB_REMOTE_URL"
 
 log_step "Install flatpak packages..."
 sudo flatpak install --system "${FLATPAK_INSTALL_PACKAGES[@]}"
