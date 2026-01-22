@@ -179,6 +179,13 @@ log_section "NVIDIA drivers (RTX 4060)"
 log_step "Checking Secure Boot status (mokutil)..."
 mokutil --sb-state || log_warn "mokutil not available; cannot check Secure Boot status."
 
+if rpm -q akmod-nvidia xorg-x11-drv-nvidia >/dev/null 2>&1; then
+  log_step "NVIDIA driver packages already installed"
+fi
+
+if lsmod | grep -Eq '^nvidia|^nvidia_drm|^nvidia_uvm|^nvidia_modeset'; then
+  log_step "NVIDIA driver modules already loaded; skipping akmods/dracut"
+else
 log_step "Building NVIDIA kernel module (akmods)..."
 sudo akmods --force
 
@@ -186,6 +193,7 @@ log_step "Regenerating initramfs (dracut)..."
 sudo dracut --force
 
 log_warn "Reboot is strongly recommended after NVIDIA driver installation (and may be required, especially with Secure Boot)."
+fi
 
 # ---------------------------------------------------
 # Installing flatpak packages
