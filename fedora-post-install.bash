@@ -173,23 +173,23 @@ fi
 # NVIDIA drivers (RTX 4060)
 log_section "NVIDIA drivers (RTX 4060)"
 if command -v lspci >/dev/null 2>&1 && lspci | grep -qi nvidia; then
-log_step "Checking Secure Boot status (mokutil)..."
-mokutil --sb-state || log_warn "mokutil not available; cannot check Secure Boot status."
+  log_step "Checking Secure Boot status (mokutil)..."
+  mokutil --sb-state || log_warn "mokutil not available; cannot check Secure Boot status."
 
-if rpm -q akmod-nvidia xorg-x11-drv-nvidia >/dev/null 2>&1; then
-  log_step "NVIDIA driver packages already installed"
-fi
+  if rpm -q akmod-nvidia xorg-x11-drv-nvidia >/dev/null 2>&1; then
+    log_step "NVIDIA driver packages already installed"
+  fi
 
-if lsmod | grep -Eq '^nvidia|^nvidia_drm|^nvidia_uvm|^nvidia_modeset'; then
-  log_step "NVIDIA driver modules already loaded; skipping akmods/dracut"
-else
-  log_step "Building NVIDIA kernel module (akmods)..."
-  sudo akmods --force
+  if lsmod | grep -Eq '^nvidia|^nvidia_drm|^nvidia_uvm|^nvidia_modeset'; then
+    log_step "NVIDIA driver modules already loaded; skipping akmods/dracut"
+  else
+    log_step "Building NVIDIA kernel module (akmods)..."
+    sudo akmods --force
 
-  log_step "Regenerating initramfs (dracut)..."
-  sudo dracut --force
+    log_step "Regenerating initramfs (dracut)..."
+    sudo dracut --force
 
-  log_warn "Reboot is strongly recommended after NVIDIA driver installation (and may be required, especially with Secure Boot)."
+    log_warn "Reboot is strongly recommended after NVIDIA driver installation (and may be required, especially with Secure Boot)."
   fi
 else
   log_step "No NVIDIA GPU detected; skipping driver setup."
@@ -222,30 +222,18 @@ CUSTOM_INSTALL
 # ---------------------------------------------------
 log_section "GNOME settings"
 
-log_step "Enable Gnome extensions..."
-gnome-extensions enable gsconnect@andyholmes.github.io || log_warn "Failed to enable GSConnect (extension may not be installed for this user/session, or gnome-extensions may not be available)."
+if [[ ${#GNOME_EXTENSIONS[@]} -gt 0 ]]; then
+  log_step "Enable Gnome extensions..."
+  for extension in "${GNOME_EXTENSIONS[@]}"; do
+    gnome-extensions enable "$extension" || log_warn "Failed to enable $extension (extension may not be installed for this user/session, or gnome-extensions may not be available)."
+  done
+fi
 
-log_step "General GNOME settings..."
-set_gsetting org.gnome.desktop.sound event-sounds false "Alert sounds: off"
-set_gsetting org.gnome.desktop.interface enable-hot-corners false "Hot corner: off"
-set_gsetting org.gnome.desktop.notifications show-in-lock-screen false "Lock screen notifications: off"
-set_gsetting org.gnome.desktop.session idle-delay 900 "Power saving idle delay: 15 minutes"
-set_gsetting org.gnome.desktop.screensaver lock-delay 300 "Screen lock delay: 5 minutes"
-set_gsetting org.gnome.desktop.interface power-profile "performance" "Power profile: performance"
-set_gsetting org.gnome.system.locale region "fr_BE.UTF-8" "Formats: Belgium"
-
-log_step "Files (Nautilus) settings"
-set_gsetting org.gnome.nautilus.preferences sort-directories-first true "Sort folders before files"
-set_gsetting org.gnome.nautilus.preferences recursive-search "always" "Search all locations"
-set_gsetting org.gnome.nautilus.preferences show-image-thumbnails "always" "Enable thumbnails for all folders"
-
-log_section "Text Editor settings"
-set_gsetting org.gnome.TextEditor show-line-numbers true "Display line numbers: on"
-set_gsetting org.gnome.TextEditor highlight-current-line true "Highlight current line: on"
-set_gsetting org.gnome.TextEditor show-overview-map true "Display overview map: on"
-set_gsetting org.gnome.TextEditor indent-style "'space'" "Indentation: spaces"
-set_gsetting org.gnome.TextEditor tab-width 4 "Spaces per tab: 4"
-set_gsetting org.gnome.TextEditor indent-width 4 "Spaces per indent: 4"
+log_step "Apply gsettings..."
+for entry in "${GNOME_GSETTINGS[@]}"; do
+  IFS='|' read -r schema key value desc <<<"$entry"
+  set_gsetting "$schema" "$key" "$value" "$desc"
+done
 
 # ---------------------------------------------------
 # Create SSH key
@@ -283,9 +271,14 @@ log_section "Cloning git repos"
 
 cd "$HOME/scripts"
 
-git clone git@github.com:margrevm/fedora-post-install.git || log_warn "Clone failed (already exists or access issue)."
-git clone git@github.com:margrevm/fedora-update.git || log_warn "Clone failed (already exists or access issue)."
-git clone git@github.com:margrevm/housekeep.git || log_warn "Clone failed (already exists or access issue)."
+for repo in "${GIT_CLONE_REPOS[@]}"; do
+  IFS='|' read -r repo_url repo_dest <<<"$repo"
+  if [[ -n "${repo_dest:-}" ]]; then
+    git clone "$repo_url" "$repo_dest" || log_warn "Clone failed (already exists or access issue)."
+  else
+    git clone "$repo_url" || log_warn "Clone failed (already exists or access issue)."
+  fi
+done
 
 # ---------------------------------------------------
 # Custom steps
