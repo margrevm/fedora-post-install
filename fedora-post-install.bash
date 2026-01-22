@@ -312,19 +312,10 @@ git clone git@github.com:margrevm/fedora-update.git || log_warn "Clone failed (a
 git clone git@github.com:margrevm/housekeep.git || log_warn "Clone failed (already exists or access issue)."
 
 # ---------------------------------------------------
-# Dotfiles via stow
+# Custom steps
 # ---------------------------------------------------
-log_section "Dotfiles (stow)"
-
-cd "$HOME/scripts"
-git clone git@github.com:margrevm/dotfiles.git || log_warn "Clone failed (already exists or access issue)."
-
-log_step "Stowing dotfiles with --adopt..."
-stow -d "$HOME/scripts/dotfiles" -t "$HOME" . --adopt
-
-log_step "Resetting dotfiles repo to clean state..."
-cd "$HOME/scripts/dotfiles"
-git reset --hard
+log_section "Custom steps"
+CUSTOM_STEPS
 
 # ---------------------------------------------------
 # Summary + reboot-required check
