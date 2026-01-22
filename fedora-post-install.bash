@@ -173,7 +173,7 @@ fi
 # ---------------------------------------------------
 # NVIDIA drivers (RTX 4060)
 log_section "NVIDIA drivers (RTX 4060)"
-
+if command -v lspci >/dev/null 2>&1 && lspci | grep -qi nvidia; then
 log_step "Checking Secure Boot status (mokutil)..."
 mokutil --sb-state || log_warn "mokutil not available; cannot check Secure Boot status."
 
@@ -191,6 +191,9 @@ else
   sudo dracut --force
 
   log_warn "Reboot is strongly recommended after NVIDIA driver installation (and may be required, especially with Secure Boot)."
+  fi
+else
+  log_step "No NVIDIA GPU detected; skipping driver setup."
 fi
 
 # ---------------------------------------------------
