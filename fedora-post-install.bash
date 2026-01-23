@@ -10,17 +10,18 @@ set -euo pipefail
 #
 # Purpose
 #   Automates common post-install steps on a freshly installed workstation to
-#   establish a consistent baseline for development and daily use.
+#   establish a consistent baseline for development and daily use, like a
+#   lightweight launch checklist.
 #
 # Usage
 #   1) Review the script before running and adjust variables to your needs.
 #   2) Execute:
-#        chmod +x post-install.sh
-#        ./post-install.sh
+#        chmod +x fedora-post-install.bash
+#        ./fedora-post-install.bash
 #
 # Notes
 #   - This script is intentionally interactive and will prompt before major
-#     phases and on non-fatal errors.
+#     phases and on non-fatal errors (think "go/no-go").
 #   - Administrative privileges (sudo) are required for system changes.
 # -----------------------------------------------------------------------------
 
@@ -89,7 +90,7 @@ prompt_continue "Run: sudo hostnamectl set-hostname $NEW_HOSTNAME"
 sudo hostnamectl set-hostname "$NEW_HOSTNAME"
 
 # ---------------------------------------------------
-# Creating folder structure
+# File system
 # ---------------------------------------------------
 log_section "Creating the folder structure"
 
@@ -212,7 +213,7 @@ log_step "Update flatpak packages..."
 sudo flatpak update
 
 # ---------------------------------------------------
-# Custom installs
+# Mission-specific payloads
 # ---------------------------------------------------
 log_section "Custom installs"
 CUSTOM_INSTALL
@@ -287,7 +288,7 @@ log_section "Custom steps"
 CUSTOM_STEPS
 
 # ---------------------------------------------------
-# Summary + reboot-required check
+# Summary
 # ---------------------------------------------------
 log_section "Summary"
 
