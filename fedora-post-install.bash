@@ -164,6 +164,9 @@ log_section "Installing fonts"
 if command -v fc-match >/dev/null 2>&1 && fc-match -f '%{family}\n' 'Arial' | grep -qi 'Arial'; then
   log_step "Arial font found; skipping ms-core-fonts install"
 else
+  log_step "Installing Microsoft core fonts package (lpf-mscore-fonts)..."
+  sudo dnf install lpf-mscore-fonts
+
   sudo lpf update || true
 
   log_step "lpf install ms-core-fonts"
@@ -179,6 +182,19 @@ fi
 # NVIDIA drivers (RTX 4060)
 log_section "NVIDIA drivers (RTX 4060)"
 if command -v lspci >/dev/null 2>&1 && lspci | grep -qi nvidia; then
+  log_step "Installing NVIDIA prerequisites and drivers..."
+  sudo dnf install \
+    kernel-devel \
+    kernel-headers \
+    gcc \
+    make \
+    akmods \
+    dkms \
+    akmod-nvidia \
+    xorg-x11-drv-nvidia-cuda \
+    nvidia-settings \
+    libva-nvidia-driver
+
   log_step "Checking Secure Boot status (mokutil)..."
   mokutil --sb-state || log_warn "mokutil not available; cannot check Secure Boot status."
 
