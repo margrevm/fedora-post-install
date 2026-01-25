@@ -17,7 +17,7 @@ set -euo pipefail
 #   1) Review the script before running and adjust variables to your needs.
 #   2) Execute:
 #        chmod +x fedora-post-install.bash
-#        ./fedora-post-install.bash
+#        ./fedora-post-install.bash /path/to/config.cfg
 #
 # Notes
 #   - This script is intentionally interactive and will prompt before major
@@ -70,7 +70,12 @@ set_gsetting() {
 FEDORA_VERSION="$(rpm -E %fedora)"
 
 # LOAD CONFIGURATION
-CONFIG_FILE="${CONFIG_FILE:-$(dirname "$0")/pc-mike.cfg}"
+if [[ $# -lt 1 ]]; then
+  printf "Usage: %s /path/to/config.cfg\n" "$0" >&2
+  exit 1
+fi
+
+CONFIG_FILE="$1"
 if [[ -f "$CONFIG_FILE" ]]; then
   # shellcheck disable=SC1090
   source "$CONFIG_FILE"

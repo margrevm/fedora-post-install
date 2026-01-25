@@ -18,7 +18,7 @@ The script emphasizes **reusability** and **simplicity**: no external libraries,
 
 ## Running the script
 
-You can either fork this repo and adapt the `template.cfg` configuration to your needs...
+You can either fork this repo and adapt the `template.cfg` configuration to your needs, then pass it as an argument...
 
 ```sh
 chmod +x fedora-post-install.bash
